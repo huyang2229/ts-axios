@@ -1,5 +1,6 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
 import { parseHeaders } from './helpers/headers'
+import { createError } from './helpers/error'
 
 export default function(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -48,11 +49,19 @@ export default function(config: AxiosRequestConfig): AxiosPromise {
     }
 
     request.onerror = function handleError() {
-      reject(new Error('Network Error'))
+      reject(createError({ message: 'Network Error', isAxiosError: false, config, request }))
     }
 
     request.ontimeout = function handletimeout() {
-      reject(new Error(`Timeout of ${timeout} ms exceeded`))
+      reject(
+        createError({
+          message: `Timeout of ${timeout} ms exceeded`,
+          code: 'ECONNTIMEOUT',
+          isAxiosError: true,
+          config,
+          request
+        })
+      )
     }
 
     request.send(data)
@@ -62,7 +71,15 @@ export default function(config: AxiosRequestConfig): AxiosPromise {
       if (status >= 200 && status <= 300) {
         resolve(response)
       } else {
-        reject(new Error(`Request failed with status code ${response.status}`))
+        reject(
+          createError({
+            message: `Request failed with status code ${response.status}`,
+            code: 'ECONNTIMEOUT',
+            isAxiosError: true,
+            config,
+            request
+          })
+        )
       }
     }
   })
