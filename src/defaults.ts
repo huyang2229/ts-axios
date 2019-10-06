@@ -6,7 +6,9 @@ const defaults: AxiosRequestConfig = {
   timeout: 0,
 
   headers: {
-    Accept: 'text/plain, application/json, */*'
+    common: {
+      Accept: 'text/plain, application/json, */*'
+    }
   }
 }
 
