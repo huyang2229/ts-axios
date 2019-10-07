@@ -46,7 +46,17 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+
+  // 允许在请求数据发送到服务器前对其进行修改
+  transformRequest?: AxiosTransformer | AxiosTransformer[]
+  // 在把响应数据传给then或者catch前对其进行修改
+  transformResponse?: AxiosTransformer | AxiosTransformer[]
+
   [propName: string]: any
+}
+
+export interface AxiosTransformer {
+  (data: any, headers?: any): any
 }
 
 export interface AxiosResponse<T = any> {
