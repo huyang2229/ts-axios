@@ -56,6 +56,8 @@ export interface AxiosRequestConfig {
   // 在把响应数据传给then或者catch前对其进行修改
   transformResponse?: AxiosTransformer | AxiosTransformer[]
 
+  cancelToken?: CancelToken
+
   [propName: string]: any
 }
 
@@ -95,4 +97,18 @@ export interface ResolvedFn<T = any> {
 
 export interface RejectedFn {
   (error: any): any
+}
+
+// 取消功能接口设计
+export interface CancelToken {
+  promise: Promise<string>
+  reason?: string
+}
+
+export interface Canceler {
+  (message?: string): void
+}
+
+export interface CancelExecutor {
+  (cancel: Canceler): void
 }
